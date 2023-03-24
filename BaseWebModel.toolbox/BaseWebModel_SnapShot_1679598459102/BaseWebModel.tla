@@ -14,7 +14,7 @@ define
 
     HasValidSessionId(req) == \E SessionId \in ServerState.SessionIds: \E cookie \in req.cookies: SessionId = cookie
     Request(src) == [source |-> src, cookies |-> BrowserState.cookies]
-    Response(req) == IF HasValidSessionId(req) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
+    Response(req) == IF HasValidSessionId(req) THEN [destination |-> req.source, status |-> "accepted"] ELSE [destination |-> req.source, status |-> "error"]
     
 end define;
 
@@ -41,7 +41,7 @@ begin
 end process;
         
 end algorithm; *)
-\* BEGIN TRANSLATION (chksum(pcal) = "43843468" /\ chksum(tla) = "71b5ab68")
+\* BEGIN TRANSLATION (chksum(pcal) = "66a74c5d" /\ chksum(tla) = "fc2a9067")
 \* Process variable req of process SameSiteRequest at line 29 col 5 changed to req_
 \* Process variable req of process CrossSiteRequest at line 37 col 5 changed to req_C
 CONSTANT defaultInitValue
@@ -53,7 +53,7 @@ MaliciousRejected == \A msg \in MessageLog: msg.request.source = "attacker" => m
 
 HasValidSessionId(req) == \E SessionId \in ServerState.SessionIds: \E cookie \in req.cookies: SessionId = cookie
 Request(src) == [source |-> src, cookies |-> BrowserState.cookies]
-Response(req) == IF HasValidSessionId(req) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
+Response(req) == IF HasValidSessionId(req) THEN [destination |-> req.source, status |-> "accepted"] ELSE [destination |-> req.source, status |-> "error"]
 
 VARIABLES req, resp, req_, req_C
 
@@ -128,5 +128,5 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 \* END TRANSLATION 
 =============================================================================
 \* Modification History
-\* Last modified Thu Mar 23 15:12:17 EDT 2023 by Cade Chabra
+\* Last modified Thu Mar 23 15:06:09 EDT 2023 by Cade Chabra
 \* Created Tue Mar 07 16:33:46 EST 2023 by Cade Chabra
