@@ -1,7 +1,10 @@
----------------------------- MODULE BaseWebModel ----------------------------
+-------------------------- MODULE BaseWebModelTest --------------------------
+
 EXTENDS Integers, TLC, Sequences
 
-(* --algorithm WebInteraction
+
+
+(* --algorithm BaseWebModelTest
 variables 
     MessageLog = {};
     BrowserState = [cookies |-> {"sessionId1"}];
@@ -9,58 +12,75 @@ variables
     
 define
     
-    HonestAccepted == \A msg \in MessageLog: msg.request.source = "honest" => msg.response.status = "success"
-    MaliciousRejected == \A msg \in MessageLog: msg.request.source = "attacker" => msg.response.status = "error"
+    HonestAccepted == 
+        \A msg \in MessageLog: 
+            msg.request.source = "honest" => msg.response.status = "success"
+    MaliciousRejected == 
+        \A msg \in MessageLog: 
+            msg.request.source = "attacker" => msg.response.status = "error"
 
     HasValidSessionId(req) == \E SessionId \in ServerState.SessionIds: \E cookie \in req.cookies: SessionId = cookie
     Request(src) == [source |-> src, cookies |-> BrowserState.cookies]
     Response(req) == IF HasValidSessionId(req) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
     
 end define;
+      
 
 procedure LogMessagePair(req, resp) begin
     Log:
     MessageLog := MessageLog \union {[request |-> req, response |-> resp]};
+    print << MessageLog >>;
     return;
 end procedure;
 
-process SameSiteRequest = 1
+process SiteRequest = 1
 variables
-    req = Request("honest");
+    reqHon = Request("honest");
+    reqAtk = Request("attacker");
 begin
     SSR:
-    call LogMessagePair(req, Response(req));
+    print <<"Same Site Req">>;
+    call LogMessagePair(reqHon, Response(reqHon));
+    
+    CSR:
+    print <<"Cross Site Req">>;
+    call LogMessagePair(reqAtk, Response(reqAtk));
 end process;
 
-process CrossSiteRequest = 1
-variables
-    req = Request("attacker");
-begin
-    CSR:
-    call LogMessagePair(req, Response(req));
-end process;
+\*process CrossSiteRequest = 1
+\*variables
+\*    req = Request("attacker");
+\*begin
+\*    CSR:
+\*    print <<"Cross Site Req">>;
+\*    call LogMessagePair(req, Response(req));
+\*end process;
         
 end algorithm; *)
-\* BEGIN TRANSLATION (chksum(pcal) = "43843468" /\ chksum(tla) = "71b5ab68")
-\* Process variable req of process SameSiteRequest at line 29 col 5 changed to req_
-\* Process variable req of process CrossSiteRequest at line 37 col 5 changed to req_C
+
+\* ====
+\* BEGIN TRANSLATION (chksum(pcal) = "5f69c2cb" /\ chksum(tla) = "6b68ddce")
 CONSTANT defaultInitValue
 VARIABLES MessageLog, BrowserState, ServerState, pc, stack
 
 (* define statement *)
-HonestAccepted == \A msg \in MessageLog: msg.request.source = "honest" => msg.response.status = "success"
-MaliciousRejected == \A msg \in MessageLog: msg.request.source = "attacker" => msg.response.status = "error"
+HonestAccepted ==
+    \A msg \in MessageLog:
+        msg.request.source = "honest" => msg.response.status = "success"
+MaliciousRejected ==
+    \A msg \in MessageLog:
+        msg.request.source = "attacker" => msg.response.status = "error"
 
 HasValidSessionId(req) == \E SessionId \in ServerState.SessionIds: \E cookie \in req.cookies: SessionId = cookie
 Request(src) == [source |-> src, cookies |-> BrowserState.cookies]
 Response(req) == IF HasValidSessionId(req) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
 
-VARIABLES req, resp, req_, req_C
+VARIABLES req, resp, reqHon, reqAtk
 
-vars == << MessageLog, BrowserState, ServerState, pc, stack, req, resp, req_, 
-           req_C >>
+vars == << MessageLog, BrowserState, ServerState, pc, stack, req, resp, 
+           reqHon, reqAtk >>
 
-ProcSet == {1} \cup {1}
+ProcSet == {1}
 
 Init == (* Global variables *)
         /\ MessageLog = {}
@@ -69,55 +89,54 @@ Init == (* Global variables *)
         (* Procedure LogMessagePair *)
         /\ req = [ self \in ProcSet |-> defaultInitValue]
         /\ resp = [ self \in ProcSet |-> defaultInitValue]
-        (* Process SameSiteRequest *)
-        /\ req_ = Request("honest")
-        (* Process CrossSiteRequest *)
-        /\ req_C = Request("attacker")
+        (* Process SiteRequest *)
+        /\ reqHon = Request("honest")
+        /\ reqAtk = Request("attacker")
         /\ stack = [self \in ProcSet |-> << >>]
-        /\ pc = [self \in ProcSet |-> CASE self = 1 -> "SSR"
-                                        [] self = 1 -> "CSR"]
+        /\ pc = [self \in ProcSet |-> "SSR"]
 
 Log(self) == /\ pc[self] = "Log"
              /\ MessageLog' = (MessageLog \union {[request |-> req[self], response |-> resp[self]]})
+             /\ PrintT(<< MessageLog' >>)
              /\ pc' = [pc EXCEPT ![self] = Head(stack[self]).pc]
              /\ req' = [req EXCEPT ![self] = Head(stack[self]).req]
              /\ resp' = [resp EXCEPT ![self] = Head(stack[self]).resp]
              /\ stack' = [stack EXCEPT ![self] = Tail(stack[self])]
-             /\ UNCHANGED << BrowserState, ServerState, req_, req_C >>
+             /\ UNCHANGED << BrowserState, ServerState, reqHon, reqAtk >>
 
 LogMessagePair(self) == Log(self)
 
 SSR == /\ pc[1] = "SSR"
-       /\ /\ req' = [req EXCEPT ![1] = req_]
-          /\ resp' = [resp EXCEPT ![1] = Response(req_)]
+       /\ PrintT(<<"Same Site Req">>)
+       /\ /\ req' = [req EXCEPT ![1] = reqHon]
+          /\ resp' = [resp EXCEPT ![1] = Response(reqHon)]
           /\ stack' = [stack EXCEPT ![1] = << [ procedure |->  "LogMessagePair",
-                                                pc        |->  "Done",
+                                                pc        |->  "CSR",
                                                 req       |->  req[1],
                                                 resp      |->  resp[1] ] >>
                                             \o stack[1]]
        /\ pc' = [pc EXCEPT ![1] = "Log"]
-       /\ UNCHANGED << MessageLog, BrowserState, ServerState, req_, req_C >>
-
-SameSiteRequest == SSR
+       /\ UNCHANGED << MessageLog, BrowserState, ServerState, reqHon, reqAtk >>
 
 CSR == /\ pc[1] = "CSR"
-       /\ /\ req' = [req EXCEPT ![1] = req_C]
-          /\ resp' = [resp EXCEPT ![1] = Response(req_C)]
+       /\ PrintT(<<"Cross Site Req">>)
+       /\ /\ req' = [req EXCEPT ![1] = reqAtk]
+          /\ resp' = [resp EXCEPT ![1] = Response(reqAtk)]
           /\ stack' = [stack EXCEPT ![1] = << [ procedure |->  "LogMessagePair",
                                                 pc        |->  "Done",
                                                 req       |->  req[1],
                                                 resp      |->  resp[1] ] >>
                                             \o stack[1]]
        /\ pc' = [pc EXCEPT ![1] = "Log"]
-       /\ UNCHANGED << MessageLog, BrowserState, ServerState, req_, req_C >>
+       /\ UNCHANGED << MessageLog, BrowserState, ServerState, reqHon, reqAtk >>
 
-CrossSiteRequest == CSR
+SiteRequest == SSR \/ CSR
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == /\ \A self \in ProcSet: pc[self] = "Done"
                /\ UNCHANGED vars
 
-Next == SameSiteRequest \/ CrossSiteRequest
+Next == SiteRequest
            \/ (\E self \in ProcSet: LogMessagePair(self))
            \/ Terminating
 
@@ -126,7 +145,8 @@ Spec == Init /\ [][Next]_vars
 Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 \* END TRANSLATION 
+
 =============================================================================
 \* Modification History
-\* Last modified Thu Mar 23 15:12:17 EDT 2023 by Cade Chabra
-\* Created Tue Mar 07 16:33:46 EST 2023 by Cade Chabra
+\* Last modified Sun Mar 26 12:36:44 EDT 2023 by andyking
+\* Created Sat Mar 25 15:05:39 EDT 2023 by andyking
