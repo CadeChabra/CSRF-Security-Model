@@ -62,12 +62,12 @@ begin
     AttackerState.SessionIds := HonestBrowser.Cookies;
     AttackerBrowser.Cookies := AttackerState.SessionIds;
     
-    call LogMessagePair(ServerRequest(AttackerBrowser), Response(ServerRequest(AttackerBrowser), HonestServerState));
+    call LogMessagePair(ServerRequest(AttackerBrowser), Response(ServerRequest(AttackerBrowser), AttackerServerState));
     
 end process;
         
 end algorithm; *)
-\* BEGIN TRANSLATION (chksum(pcal) = "af4e851f" /\ chksum(tla) = "204fe7a8")
+\* BEGIN TRANSLATION (chksum(pcal) = "570dfb4d" /\ chksum(tla) = "52fe46ec")
 CONSTANT defaultInitValue
 VARIABLES MessageLog, HonestBrowser, HonestServerState, AttackerServerState, 
           AttackerState, AttackerBrowser, pc, stack
@@ -156,7 +156,7 @@ HonestToAttacker == /\ pc[2] = "HonestToAttacker"
                     /\ AttackerState' = [AttackerState EXCEPT !.SessionIds = HonestBrowser'.Cookies]
                     /\ AttackerBrowser' = [AttackerBrowser EXCEPT !.Cookies = AttackerState'.SessionIds]
                     /\ /\ req' = [req EXCEPT ![2] = ServerRequest(AttackerBrowser')]
-                       /\ resp' = [resp EXCEPT ![2] = Response(ServerRequest(AttackerBrowser'), HonestServerState)]
+                       /\ resp' = [resp EXCEPT ![2] = Response(ServerRequest(AttackerBrowser'), AttackerServerState)]
                        /\ stack' = [stack EXCEPT ![2] = << [ procedure |->  "LogMessagePair",
                                                              pc        |->  "Done",
                                                              req       |->  req[2],
@@ -184,5 +184,5 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 23 12:12:52 EDT 2023 by Cade Chabra
+\* Last modified Sun Apr 23 11:44:55 EDT 2023 by Cade Chabra
 \* Created Sun Apr 23 11:29:07 EDT 2023 by Cade Chabra

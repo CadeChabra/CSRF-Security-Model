@@ -1,15 +1,17 @@
----------------------------- MODULE BaseWebModel ----------------------------
+-------------------------- MODULE STPWebModel --------------------------
 
 EXTENDS Integers, TLC, Sequences
 
-CONSTANT HonestSessionId
+CONSTANT HonestKey, AtkKey, HonestSessionId
 
-(* --algorithm BaseWebModel
+(* --algorithm STPWebModel
 variables 
     MessageLog = {};
     HonestBrowser = [source |-> "honest", Cookies |-> {}, Headers |-> {}];
     HonestServerState = [SessionIds |-> {}, Tokens |-> {}];
     AttackerServerState = [SessionIds |-> {}, Tokens |-> {}];
+    HonestSecretKey = [secret |-> {HonestKey}];
+    AttackerSecretKey = [secret |-> {AtkKey}];
     AttackerState = [SessionIds |-> {}];
     AttackerBrowser = [source |-> "attacker", Cookies |-> {}, Headers |-> {}]
     
@@ -25,9 +27,9 @@ define
 
     HasValidSessionId(req, srv) == \E SessionId \in srv.SessionIds: \E cookie \in req.cookies: SessionId = cookie
 \*    HasValidToken(req, srv) == \E Token \in srv.Tokens: \E Header \in req.headers: Token = Header
-\*    HasValidToken(req, srv) == (srv.Tokens = {HonestKey}) = (req.cookies = {HonestSessionId})
+    HasValidToken(req, srv) == (srv.Tokens = {HonestKey}) = (req.cookies = {HonestSessionId})
     ServerRequest(src) == [source |-> src.source, cookies |-> src.Cookies, headers |-> src.Headers]
-    Response(req, srv) == IF HasValidSessionId(req, srv) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
+    Response(req, srv) == IF (HasValidToken(req, srv)) = (HasValidSessionId(req, srv)) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
     
 end define;
 
@@ -48,6 +50,9 @@ begin
     HonestBrowser.Cookies := {HonestSessionId};
     HonestServerState.SessionIds := HonestBrowser.Cookies;
     
+    Tokens:
+    HonestServerState.Tokens := HonestSecretKey.secret;
+    HonestBrowser.Headers := HonestServerState.Tokens;
     call LogMessagePair(ServerRequest(HonestBrowser), Response(ServerRequest(HonestBrowser), HonestServerState));
 
 end process;
@@ -62,15 +67,26 @@ begin
     AttackerState.SessionIds := HonestBrowser.Cookies;
     AttackerBrowser.Cookies := AttackerState.SessionIds;
     
+    Session:
+    AttackerServerState.SessionIds := AttackerBrowser.Cookies;
+    
+    Tokens:
+    AttackerServerState.Tokens := AttackerSecretKey.secret;
+    AttackerBrowser.Headers := AttackerServerState.Tokens;
     call LogMessagePair(ServerRequest(AttackerBrowser), Response(ServerRequest(AttackerBrowser), HonestServerState));
     
 end process;
         
 end algorithm; *)
-\* BEGIN TRANSLATION (chksum(pcal) = "af4e851f" /\ chksum(tla) = "204fe7a8")
+
+\* ====
+\* BEGIN TRANSLATION (chksum(pcal) = "1544d951" /\ chksum(tla) = "fc531894")
+\* Label Session of process SiteRequest at line 50 col 5 changed to Session_
+\* Label Tokens of process SiteRequest at line 54 col 5 changed to Tokens_
 CONSTANT defaultInitValue
 VARIABLES MessageLog, HonestBrowser, HonestServerState, AttackerServerState, 
-          AttackerState, AttackerBrowser, pc, stack
+          HonestSecretKey, AttackerSecretKey, AttackerState, AttackerBrowser, 
+          pc, stack
 
 (* define statement *)
 HonestAccepted ==
@@ -83,14 +99,15 @@ MaliciousRejected ==
 
 HasValidSessionId(req, srv) == \E SessionId \in srv.SessionIds: \E cookie \in req.cookies: SessionId = cookie
 
-
+HasValidToken(req, srv) == (srv.Tokens = {HonestKey}) = (req.cookies = {HonestSessionId})
 ServerRequest(src) == [source |-> src.source, cookies |-> src.Cookies, headers |-> src.Headers]
-Response(req, srv) == IF HasValidSessionId(req, srv) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
+Response(req, srv) == IF (HasValidToken(req, srv)) = (HasValidSessionId(req, srv)) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
 
 VARIABLES req, resp
 
 vars == << MessageLog, HonestBrowser, HonestServerState, AttackerServerState, 
-           AttackerState, AttackerBrowser, pc, stack, req, resp >>
+           HonestSecretKey, AttackerSecretKey, AttackerState, AttackerBrowser, 
+           pc, stack, req, resp >>
 
 ProcSet == {1} \cup {2}
 
@@ -99,6 +116,8 @@ Init == (* Global variables *)
         /\ HonestBrowser = [source |-> "honest", Cookies |-> {}, Headers |-> {}]
         /\ HonestServerState = [SessionIds |-> {}, Tokens |-> {}]
         /\ AttackerServerState = [SessionIds |-> {}, Tokens |-> {}]
+        /\ HonestSecretKey = [secret |-> {HonestKey}]
+        /\ AttackerSecretKey = [secret |-> {AtkKey}]
         /\ AttackerState = [SessionIds |-> {}]
         /\ AttackerBrowser = [source |-> "attacker", Cookies |-> {}, Headers |-> {}]
         (* Procedure LogMessagePair *)
@@ -116,21 +135,29 @@ Log(self) == /\ pc[self] = "Log"
              /\ resp' = [resp EXCEPT ![self] = Head(stack[self]).resp]
              /\ stack' = [stack EXCEPT ![self] = Tail(stack[self])]
              /\ UNCHANGED << HonestBrowser, HonestServerState, 
-                             AttackerServerState, AttackerState, 
-                             AttackerBrowser >>
+                             AttackerServerState, HonestSecretKey, 
+                             AttackerSecretKey, AttackerState, AttackerBrowser >>
 
 LogMessagePair(self) == Log(self)
 
 SSR == /\ pc[1] = "SSR"
        /\ PrintT(<<"Same Site Req">>)
-       /\ pc' = [pc EXCEPT ![1] = "Session"]
+       /\ pc' = [pc EXCEPT ![1] = "Session_"]
        /\ UNCHANGED << MessageLog, HonestBrowser, HonestServerState, 
-                       AttackerServerState, AttackerState, AttackerBrowser, 
-                       stack, req, resp >>
+                       AttackerServerState, HonestSecretKey, AttackerSecretKey, 
+                       AttackerState, AttackerBrowser, stack, req, resp >>
 
-Session == /\ pc[1] = "Session"
-           /\ HonestBrowser' = [HonestBrowser EXCEPT !.Cookies = {HonestSessionId}]
-           /\ HonestServerState' = [HonestServerState EXCEPT !.SessionIds = HonestBrowser'.Cookies]
+Session_ == /\ pc[1] = "Session_"
+            /\ HonestBrowser' = [HonestBrowser EXCEPT !.Cookies = {HonestSessionId}]
+            /\ HonestServerState' = [HonestServerState EXCEPT !.SessionIds = HonestBrowser'.Cookies]
+            /\ pc' = [pc EXCEPT ![1] = "Tokens_"]
+            /\ UNCHANGED << MessageLog, AttackerServerState, HonestSecretKey, 
+                            AttackerSecretKey, AttackerState, AttackerBrowser, 
+                            stack, req, resp >>
+
+Tokens_ == /\ pc[1] = "Tokens_"
+           /\ HonestServerState' = [HonestServerState EXCEPT !.Tokens = HonestSecretKey.secret]
+           /\ HonestBrowser' = [HonestBrowser EXCEPT !.Headers = HonestServerState'.Tokens]
            /\ /\ req' = [req EXCEPT ![1] = ServerRequest(HonestBrowser')]
               /\ resp' = [resp EXCEPT ![1] = Response(ServerRequest(HonestBrowser'), HonestServerState')]
               /\ stack' = [stack EXCEPT ![1] = << [ procedure |->  "LogMessagePair",
@@ -139,34 +166,49 @@ Session == /\ pc[1] = "Session"
                                                     resp      |->  resp[1] ] >>
                                                 \o stack[1]]
            /\ pc' = [pc EXCEPT ![1] = "Log"]
-           /\ UNCHANGED << MessageLog, AttackerServerState, AttackerState, 
-                           AttackerBrowser >>
+           /\ UNCHANGED << MessageLog, AttackerServerState, HonestSecretKey, 
+                           AttackerSecretKey, AttackerState, AttackerBrowser >>
 
-SiteRequest == SSR \/ Session
+SiteRequest == SSR \/ Session_ \/ Tokens_
 
 CSR == /\ pc[2] = "CSR"
        /\ PrintT(<<"Cross Site Req">>)
        /\ pc' = [pc EXCEPT ![2] = "HonestToAttacker"]
        /\ UNCHANGED << MessageLog, HonestBrowser, HonestServerState, 
-                       AttackerServerState, AttackerState, AttackerBrowser, 
-                       stack, req, resp >>
+                       AttackerServerState, HonestSecretKey, AttackerSecretKey, 
+                       AttackerState, AttackerBrowser, stack, req, resp >>
 
 HonestToAttacker == /\ pc[2] = "HonestToAttacker"
                     /\ HonestBrowser' = [HonestBrowser EXCEPT !.Cookies = {HonestSessionId}]
                     /\ AttackerState' = [AttackerState EXCEPT !.SessionIds = HonestBrowser'.Cookies]
                     /\ AttackerBrowser' = [AttackerBrowser EXCEPT !.Cookies = AttackerState'.SessionIds]
-                    /\ /\ req' = [req EXCEPT ![2] = ServerRequest(AttackerBrowser')]
-                       /\ resp' = [resp EXCEPT ![2] = Response(ServerRequest(AttackerBrowser'), HonestServerState)]
-                       /\ stack' = [stack EXCEPT ![2] = << [ procedure |->  "LogMessagePair",
-                                                             pc        |->  "Done",
-                                                             req       |->  req[2],
-                                                             resp      |->  resp[2] ] >>
-                                                         \o stack[2]]
-                    /\ pc' = [pc EXCEPT ![2] = "Log"]
+                    /\ pc' = [pc EXCEPT ![2] = "Session"]
                     /\ UNCHANGED << MessageLog, HonestServerState, 
-                                    AttackerServerState >>
+                                    AttackerServerState, HonestSecretKey, 
+                                    AttackerSecretKey, stack, req, resp >>
 
-CrossSiteRequest == CSR \/ HonestToAttacker
+Session == /\ pc[2] = "Session"
+           /\ AttackerServerState' = [AttackerServerState EXCEPT !.SessionIds = AttackerBrowser.Cookies]
+           /\ pc' = [pc EXCEPT ![2] = "Tokens"]
+           /\ UNCHANGED << MessageLog, HonestBrowser, HonestServerState, 
+                           HonestSecretKey, AttackerSecretKey, AttackerState, 
+                           AttackerBrowser, stack, req, resp >>
+
+Tokens == /\ pc[2] = "Tokens"
+          /\ AttackerServerState' = [AttackerServerState EXCEPT !.Tokens = AttackerSecretKey.secret]
+          /\ AttackerBrowser' = [AttackerBrowser EXCEPT !.Headers = AttackerServerState'.Tokens]
+          /\ /\ req' = [req EXCEPT ![2] = ServerRequest(AttackerBrowser')]
+             /\ resp' = [resp EXCEPT ![2] = Response(ServerRequest(AttackerBrowser'), HonestServerState)]
+             /\ stack' = [stack EXCEPT ![2] = << [ procedure |->  "LogMessagePair",
+                                                   pc        |->  "Done",
+                                                   req       |->  req[2],
+                                                   resp      |->  resp[2] ] >>
+                                               \o stack[2]]
+          /\ pc' = [pc EXCEPT ![2] = "Log"]
+          /\ UNCHANGED << MessageLog, HonestBrowser, HonestServerState, 
+                          HonestSecretKey, AttackerSecretKey, AttackerState >>
+
+CrossSiteRequest == CSR \/ HonestToAttacker \/ Session \/ Tokens
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == /\ \A self \in ProcSet: pc[self] = "Done"
@@ -184,5 +226,6 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 23 12:12:52 EDT 2023 by Cade Chabra
-\* Created Sun Apr 23 11:29:07 EDT 2023 by Cade Chabra
+\* Last modified Sun Apr 23 12:13:36 EDT 2023 by Cade Chabra
+\* Last modified Fri Apr 21 11:11:49 EDT 2023 by andyking
+\* Created Sat Mar 25 15:05:39 EDT 2023 by andyking

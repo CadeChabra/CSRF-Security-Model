@@ -1,6 +1,6 @@
 ---- MODULE MC ----
-EXTENDS BaseWebModel, TLC
+EXTENDS STPWebModel, TLC
 
 =============================================================================
 \* Modification History
-\* Created Sun Apr 23 12:12:55 EDT 2023 by Cade Chabra
+\* Created Sun Apr 23 11:22:18 EDT 2023 by Cade Chabra
