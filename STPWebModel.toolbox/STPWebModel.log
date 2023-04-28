@@ -1,0 +1,338 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2023.4.28)  28 APR 2023 15:44
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./STPWebModel.tex
+(STPWebModel.tex
+LaTeX2e <2022-06-01> patch level 5
+L3 programming layer <2022-09-28>
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+File: size10.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+)
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.st
+y
+Package: color 2022/01/06 v1.3d Standard LaTeX Color (DPC)
+
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\colo
+r.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 149.
+
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdft
+ex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+\stockwidth=\dimen139
+\stockheight=\dimen140
+)
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolo
+r.ltx))
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/base\latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+) (C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
+)
+\symlength=\skip49
+\equalswidth=\skip50
+\charwidth=\skip51
+\boxrulewd=\skip52
+\boxlineht=\skip53
+\boxruleht=\skip54
+\boxruledp=\skip55
+\pcalvspace=\skip56
+\lcomindent=\skip57
+\@xlen=\skip58
+\templena=\skip59
+\templenb=\skip60
+\tempboxa=\box51
+\vshadelen=\skip61
+\boxwidth=\skip62
+\multicommentdepth=\skip63
+\c@pardepth=\count193
+\tempsbox=\box52
+\@cparht=\skip64
+\@cpardp=\skip65
+\xmcomlen=\skip66
+\spacewidth=\skip67
+\alignboxwidth=\skip68
+\alignwidth=\skip69
+\alignbox=\box53
+\symtlaitalics=\mathgroup5
+\c@tlx@ctr=\count194
+
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.st
+y
+Package: verbatim 2020-07-07 v1.5u LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks16
+\verbatim@line=\toks17
+\verbatim@in@stream=\read2
+)
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backe
+nd-pdftex.def
+File: l3backend-pdftex.def 2022-09-28 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count195
+\l__pdf_internal_box=\box54
+) (STPWebModel.aux)
+\openout1 = `STPWebModel.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 939.
+LaTeX Font Info:    ... okay on input line 939.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 939.
+LaTeX Font Info:    ... okay on input line 939.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 939.
+LaTeX Font Info:    ... okay on input line 939.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 939.
+LaTeX Font Info:    ... okay on input line 939.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 939.
+LaTeX Font Info:    ... okay on input line 939.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 939.
+LaTeX Font Info:    ... okay on input line 939.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 939.
+LaTeX Font Info:    ... okay on input line 939.
+
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-
+pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count196
+\scratchdimen=\dimen141
+\scratchbox=\box55
+\nofMPsegments=\count197
+\nofMParguments=\count198
+\everyMPshowfont=\toks18
+\MPscratchCnt=\count199
+\MPscratchDim=\dimen142
+\MPnumerator=\count266
+\makeMPintoPDFobject=\count267
+\everyMPtoPDFconversion=\toks19
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 942.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 942.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 94
+2.
+(C:\Users\Cade Chabra\AppData\Local\Programs\MiKTeX\tex/latex/base\ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+Overfull \hbox (116.79668pt too wide) in paragraph at lines 982--983
+[][][] 
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 988.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 988.
+
+Overfull \hbox (17.02524pt too wide) in paragraph at lines 983--991
+[][][][][] 
+ []
+
+
+Overfull \hbox (73.8353pt too wide) in paragraph at lines 991--994
+[][][] 
+ []
+
+
+Overfull \hbox (58.39828pt too wide) in paragraph at lines 994--999
+[][][] 
+ []
+
+
+Overfull \hbox (483.5906pt too wide) in paragraph at lines 999--1000
+[][][] 
+ []
+
+[1
+
+{C:/Users/Cade Chabra/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+Overfull \hbox (178.50484pt too wide) in paragraph at lines 1030--1031
+[][][] 
+ []
+
+
+Overfull \hbox (192.04906pt too wide) in paragraph at lines 1059--1060
+[][][] 
+ []
+
+
+Overfull \hbox (2.72235pt too wide) in paragraph at lines 1095--1097
+[][] 
+ []
+
+
+Overfull \hbox (4.03685pt too wide) in paragraph at lines 1097--1098
+[][] 
+ []
+
+
+Overfull \hbox (100.39668pt too wide) in paragraph at lines 1116--1117
+[][] 
+ []
+
+[2]
+Overfull \hbox (57.4353pt too wide) in paragraph at lines 1119--1121
+[][] 
+ []
+
+
+Overfull \hbox (41.99829pt too wide) in paragraph at lines 1121--1126
+[][] 
+ []
+
+
+Overfull \hbox (467.19061pt too wide) in paragraph at lines 1126--1127
+[][] 
+ []
+
+
+Overfull \hbox (44.93423pt too wide) in paragraph at lines 1177--1178
+[][] 
+ []
+
+
+Overfull \hbox (2.66841pt too wide) in paragraph at lines 1191--1192
+[][] 
+ []
+
+
+Overfull \hbox (12.32977pt too wide) in paragraph at lines 1202--1204
+[][] 
+ []
+
+[3]
+Overfull \hbox (41.59645pt too wide) in paragraph at lines 1208--1210
+[][] 
+ []
+
+
+Overfull \hbox (105.7431pt too wide) in paragraph at lines 1210--1212
+[][] 
+ []
+
+
+Overfull \hbox (1.85197pt too wide) in paragraph at lines 1214--1215
+[][] 
+ []
+
+
+Overfull \hbox (2.30055pt too wide) in paragraph at lines 1215--1216
+[][] 
+ []
+
+
+Overfull \hbox (85.16028pt too wide) in paragraph at lines 1220--1222
+[][] 
+ []
+
+
+Overfull \hbox (76.4938pt too wide) in paragraph at lines 1222--1224
+[][] 
+ []
+
+
+Overfull \hbox (121.887pt too wide) in paragraph at lines 1227--1229
+[][] 
+ []
+
+
+Overfull \hbox (2.64677pt too wide) in paragraph at lines 1229--1230
+[][] 
+ []
+
+
+Overfull \hbox (0.12196pt too wide) in paragraph at lines 1237--1239
+[][] 
+ []
+
+
+Overfull \hbox (13.85977pt too wide) in paragraph at lines 1250--1252
+[][] 
+ []
+
+
+Overfull \hbox (83.83644pt too wide) in paragraph at lines 1257--1259
+[][] 
+ []
+
+
+Overfull \hbox (112.79665pt too wide) in paragraph at lines 1259--1261
+[][] 
+ []
+
+
+Overfull \hbox (126.34143pt too wide) in paragraph at lines 1261--1263
+[][] 
+ []
+
+
+Overfull \hbox (118.75388pt too wide) in paragraph at lines 1272--1274
+[][] 
+ []
+
+[4]
+Overfull \hbox (100.97661pt too wide) in paragraph at lines 1283--1285
+[][] 
+ []
+
+
+Overfull \hbox (92.31013pt too wide) in paragraph at lines 1285--1287
+[][] 
+ []
+
+
+Overfull \hbox (121.35355pt too wide) in paragraph at lines 1290--1292
+[][] 
+ []
+
+[5] (STPWebModel.aux) ) 
+Here is how much of TeX's memory you used:
+ 1400 strings out of 475385
+ 22085 string characters out of 2774039
+ 393026 words of memory out of 3000000
+ 22812 multiletter control sequences out of 15000+600000
+ 474737 words of font info for 49 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 34i,11n,40p,229b,241s stack positions out of 10000i,1000n,20000p,200000b,80000s
+<C:/Users/Cade Chabra/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/Cade Chabra/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/Cade Chabra/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/
+Cade Chabra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.
+pfb><C:/Users/Cade Chabra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
+onts/cm/cmr10.pfb><C:/Users/Cade Chabra/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmr5.pfb><C:/Users/Cade Chabra/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Cade Chabra/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/Cade Chabra/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Use
+rs/Cade Chabra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cms
+y10.pfb><C:/Users/Cade Chabra/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmsy7.pfb><C:/Users/Cade Chabra/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Cade Chabra/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Cade Chabra/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti7.pfb><C:/Users/Cade
+ Chabra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti8.pfb>
+<C:/Users/Cade Chabra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/latxfont/lasy10.pfb>
+Output written on STPWebModel.pdf (5 pages, 201027 bytes).
+PDF statistics:
+ 98 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

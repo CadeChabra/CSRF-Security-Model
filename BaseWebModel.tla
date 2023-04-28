@@ -4,17 +4,23 @@ EXTENDS Integers, TLC, Sequences
 
 CONSTANT HonestSessionId
 
+\* Web interaction model with no CSRF prevention techniques implemented
 (* --algorithm BaseWebModel
 variables 
+    \* Logs all request-response pairs - used to check invariants
     MessageLog = {};
+    \* Model of honest client's browser context
     HonestBrowser = [source |-> "honest", Cookies |-> {}, Headers |-> {}];
+    \* Model of honest server
     HonestServerState = [SessionIds |-> {}, Tokens |-> {}];
+    \* Model of attacker's capabilities
     AttackerServerState = [SessionIds |-> {}, Tokens |-> {}];
     AttackerState = [SessionIds |-> {}];
     AttackerBrowser = [source |-> "attacker", Cookies |-> {}, Headers |-> {}]
     
 define
     
+    \* Invariants to be checked on the model
     HonestAccepted == 
         \A msg \in MessageLog: 
             msg.request.source = "honest" => msg.response.status = "success"
@@ -22,16 +28,16 @@ define
         \A msg \in MessageLog: 
             msg.request.source = "attacker" => msg.response.status = "error"
     
-
+    \* Checks that a request (req) to a server (srv) has a valid session ID with that server
     HasValidSessionId(req, srv) == \E SessionId \in srv.SessionIds: \E cookie \in req.cookies: SessionId = cookie
-\*    HasValidToken(req, srv) == \E Token \in srv.Tokens: \E Header \in req.headers: Token = Header
-\*    HasValidToken(req, srv) == (srv.Tokens = {HonestKey}) = (req.cookies = {HonestSessionId})
+    \* Generates a request from a source browser (src)
     ServerRequest(src) == [source |-> src.source, cookies |-> src.Cookies, headers |-> src.Headers]
+    \* Creates a response based on a request (req) and the destination server (srv) - checks if request has a valid session ID before accepting/rejecting
     Response(req, srv) == IF HasValidSessionId(req, srv) THEN [destination |-> req.source, status |-> "success"] ELSE [destination |-> req.source, status |-> "error"]
     
 end define;
 
-
+\* Adds a request-response pair to the message log
 procedure LogMessagePair(req, resp) begin
     Log:
     MessageLog := MessageLog \union {[request |-> req, response |-> resp]};
@@ -39,29 +45,36 @@ procedure LogMessagePair(req, resp) begin
     return;
 end procedure;
 
+\* Process for an honest request
 process SiteRequest = 1
 begin
     SSR:
     print <<"Same Site Req">>;
    
+    \* Honest browser and server establish a session ID
     Session:
     HonestBrowser.Cookies := {HonestSessionId};
     HonestServerState.SessionIds := HonestBrowser.Cookies;
     
+    \* Generate and log request-response pair based on a request from the honest site
     call LogMessagePair(ServerRequest(HonestBrowser), Response(ServerRequest(HonestBrowser), HonestServerState));
 
 end process;
 
+\* Process for a malicious cross-site request
 process CrossSiteRequest = 2
 begin
     CSR:
     print <<"Cross Site Req">>;
     
+    \* Honest browser and server establish a session ID
     HonestToAttacker:
     HonestBrowser.Cookies := {HonestSessionId};
+    \* Attacker is able to access session ID through the cookie set on the browser
     AttackerState.SessionIds := HonestBrowser.Cookies;
     AttackerBrowser.Cookies := AttackerState.SessionIds;
     
+    \* Generate and log request-response pair based on a request from the attacker site
     call LogMessagePair(ServerRequest(AttackerBrowser), Response(ServerRequest(AttackerBrowser), HonestServerState));
     
 end process;
@@ -184,5 +197,5 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 23 12:12:52 EDT 2023 by Cade Chabra
+\* Last modified Fri Apr 28 16:12:30 EDT 2023 by Cade Chabra
 \* Created Sun Apr 23 11:29:07 EDT 2023 by Cade Chabra
